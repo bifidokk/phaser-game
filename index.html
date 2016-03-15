@@ -8,6 +8,7 @@
     <script type="text/javascript" src="js/platforms.js"></script>
     <script type="text/javascript" src="js/stars.js"></script>
     <script type="text/javascript" src="js/score.js"></script>
+    <script type="text/javascript" src="js/map.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -36,49 +37,28 @@
     var score;
     var map;
     var sky;
-    var layers = {};
 
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         sky = game.add.sprite(0, 0, 'sky');
         sky.fixedToCamera = true;
 
-        map = game.add.tilemap('level');
-        map.addTilesetImage('blocks', 'tiles');
-
-        map.layers.forEach(function (layer) {
-            layers[layer.name] = map.createLayer(layer.name);
-            if (layer.properties.collision) { // collision layer
-                var collision_tiles = [];
-                layer.data.forEach(function (data_row) { // find tiles used in the layer
-                    data_row.forEach(function (tile) {
-                        // check if it's a valid tile index and isn't already in the list
-                        if (tile != null && tile.index > 0 && collision_tiles.indexOf(tile.index) === -1) {
-                            collision_tiles.push(tile.index);
-                        }
-                    }, this);
-                }, this);
-                this.map.setCollision(collision_tiles, true, layer.name);
-            }
-
-            layers[layer.name].resizeWorld();
-        });
-
+        map = new Map(game);
+        map.addMap();
 
         player = new Player(game, 40, 3100, 'dude');
 
         starsManager = new Stars(game);
-        score = new Score(game);
-
         starsManager.onKilled.add(score.addScore, score);
+        score = new Score(game);
 
         game.camera.y = 2600;
         game.camera.follow(player);
     }
 
     function update() {
-        game.physics.arcade.collide(player, layers['collision']);
-        game.physics.arcade.collide(starsManager.stars, layers['collision']);
+        game.physics.arcade.collide(player, map.layers[ MAP_COLLISION_TILES_NAME ]);
+        game.physics.arcade.collide(starsManager.stars, map.layers[ MAP_COLLISION_TILES_NAME ]);
         game.physics.arcade.overlap(player, starsManager.stars, starsManager.collectStar, null, starsManager);
 
         player.playerUpdate();
