@@ -22,22 +22,20 @@ Stars.prototype.createStars = function() {
 };
 
 Stars.prototype.collectStar = function(player, star) {
-    star.body.gravity.y = 0;
-    star.body.bounce.y = 0;
 
     if(star.collected) {
         return false;
     }
 
     star.collected = true;
+    star.body.moves = false;
 
-    game.add.tween(star).to( { x: score.scoreText.x, y: score.scoreText.y }, 500, "").start().onComplete.add(this.killStar, star);
-    this.onKilled.dispatch();
-};
-
-Stars.prototype.killStar = function(star) {
-    this.game.tweens.removeAll(star);
-    star.kill();
-
-    console.log(this.game.tweens);
+    game.add.tween(star)
+        .to( { x: score.scoreText.x, y: score.scoreText.y }, 1000, null)
+        .start()
+        .onComplete
+        .add(function(){
+            star.kill();
+            this.onKilled.dispatch();
+        }, this);
 };
