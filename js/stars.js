@@ -1,17 +1,15 @@
 /**
  * Created by danilka on 27.02.2016.
  */
-Stars = function(game) {
+var Stars = function(game, score) {
     this.game = game;
+    this.score = score;
     this.stars = game.add.group();
     this.stars.enableBody = true;
 
     this.createStars();
     this.onKilled = new Phaser.Signal();
 };
-
-Stars.prototype = Object.create(Phaser.Sprite.prototype);
-Stars.prototype.constructor = Stars;
 
 Stars.prototype.createStars = function() {
     for (var i = 0; i < 12; i++) {
@@ -30,8 +28,8 @@ Stars.prototype.collectStar = function(player, star) {
     star.collected = true;
     star.body.moves = false;
 
-    game.add.tween(star)
-        .to( { x: score.scoreText.x, y: score.scoreText.y }, 1000, null)
+    this.game.add.tween(star)
+        .to( { x: this.score.scoreText.x, y: this.score.scoreText.y }, 1000, null)
         .start()
         .onComplete
         .add(function(){

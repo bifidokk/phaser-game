@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script type="text/javascript" src="js/phaser.min.js"></script>
+    <script type="text/javascript" src="js/boot.js"></script>
+    <script type="text/javascript" src="js/preloader.js"></script>
+    <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="js/player.js"></script>
-    <script type="text/javascript" src="js/platforms.js"></script>
     <script type="text/javascript" src="js/stars.js"></script>
     <script type="text/javascript" src="js/score.js"></script>
     <script type="text/javascript" src="js/map.js"></script>
@@ -16,56 +18,16 @@
     </style>
 </head>
 <body>
+<div id="game"></div>
 <script type="text/javascript">
+    (function() {
+        var game = new Phaser.Game(600, 600, Phaser.AUTO, 'game');
+        game.state.add("Boot", Boot);
+        game.state.add('Preloader', Preloader);
+        game.state.add('Game', Game);
 
-    var game = new Phaser.Game(600, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-
-    function preload() {
-
-        game.load.image('sky', 'assets/sky.png');
-        game.load.image('ground', 'assets/platform.png');
-        game.load.image('star', 'assets/star.png');
-        game.load.spritesheet('dude', 'assets/skull.png', 80, 80, -1, 0, 0);
-
-        game.load.tilemap('level', 'assets/level1.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles', 'assets/generic_platformer_tiles.png');
-    }
-
-    var player;
-    var platformManager;
-    var starsManager;
-    var score;
-    var map;
-    var sky;
-
-    function create() {
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-        sky = game.add.sprite(0, 0, 'sky');
-        sky.fixedToCamera = true;
-
-        map = new Map(game);
-        map.addMap();
-
-        player = new Player(game, 40, 3100, 'dude');
-
-        starsManager = new Stars(game);
-        starsManager.onKilled.add(score.addScore, score);
-        score = new Score(game);
-
-        game.camera.y = 2600;
-        game.camera.follow(player);
-    }
-
-    function update() {
-        game.physics.arcade.collide(player, map.layers[ MAP_COLLISION_TILES_NAME ]);
-        game.physics.arcade.collide(starsManager.stars, map.layers[ MAP_COLLISION_TILES_NAME ]);
-        game.physics.arcade.overlap(player, starsManager.stars, starsManager.collectStar, null, starsManager);
-
-        player.playerUpdate();
-    }
-
-
-
+        game.state.start('Boot');
+    })();
 </script>
 </body>
 </html>

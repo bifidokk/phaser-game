@@ -3,7 +3,7 @@
  */
 var MAP_COLLISION_TILES_NAME = 'collision';
 
-Map = function(game) {
+var Map = function(game) {
     this.game = game;
     this.tilemap = 'level';
     this.tileimage = 'tiles';
@@ -11,8 +11,6 @@ Map = function(game) {
     this.map = null;
 };
 
-Map.prototype = Object.create(Phaser.Sprite.prototype);
-Map.prototype.constructor = Map;
 
 Map.prototype.addMap = function() {
     this.map = this.game.add.tilemap(this.tilemap);
