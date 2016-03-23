@@ -34,4 +34,8 @@ Map.prototype.addMap = function() {
     }, this);
 };
 
+Map.prototype.getTileByXY = function() {
+
+}
+
 

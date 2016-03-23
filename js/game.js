@@ -24,12 +24,19 @@ Game.prototype.create = function() {
 
     this.game.camera.y = 2600;
     this.game.camera.follow(this.player);
+
+    this.enemies = this.game.add.group();
+    this.enemies.add(new Enemy(this.game, 460, 2900, 'dude', this.map));
 };
 
 Game.prototype.update = function() {
     this.game.physics.arcade.collide(this.player, this.map.layers[ MAP_COLLISION_TILES_NAME ]);
     this.game.physics.arcade.collide(this.starsManager.stars, this.map.layers[ MAP_COLLISION_TILES_NAME ]);
     this.game.physics.arcade.overlap(this.player, this.starsManager.stars, this.starsManager.collectStar, null, this.starsManager);
+    this.game.physics.arcade.collide(this.enemies, this.map.layers[ MAP_COLLISION_TILES_NAME ]);
 
     this.player.playerUpdate();
+    this.enemies.forEach(function(enemy) {
+        enemy.enemyUpdate();
+    });
 };
