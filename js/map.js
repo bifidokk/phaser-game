@@ -2,6 +2,8 @@
  * Created by danilka on 15.03.2016.
  */
 var MAP_COLLISION_TILES_NAME = 'collision';
+var MAP_TILE_WIDTH = 32;
+var MAP_TILE_HEIGHT = 32;
 
 var Map = function(game) {
     this.game = game;
@@ -33,9 +35,5 @@ Map.prototype.addMap = function() {
         this.layers[layer.name].resizeWorld();
     }, this);
 };
-
-Map.prototype.getTileByXY = function() {
-
-}
 
 

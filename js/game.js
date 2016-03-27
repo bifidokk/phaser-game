@@ -13,8 +13,10 @@ Game.prototype.create = function() {
 
     this.map = new Map(this.game);
     this.map.addMap();
+    this.game.map = this.map.map;
 
     this.player = new Player(this.game, 40, 3100, 'dude');
+    this.game.player = this.player;
 
     this.score = new Score(this.game);
 
@@ -26,7 +28,7 @@ Game.prototype.create = function() {
     this.game.camera.follow(this.player);
 
     this.enemies = this.game.add.group();
-    this.enemies.add(new Enemy(this.game, 460, 2900, 'dude', this.map));
+    this.enemies.add(new Enemy(this.game, 460, 2900, 'dude'));
 };
 
 Game.prototype.update = function() {
