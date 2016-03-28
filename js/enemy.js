@@ -25,7 +25,9 @@ var Enemy = function (game, x, y, name) {
     this.directionKoef = 1;
     this.body.velocity.x = this.walkingSpeed;
 
-    this.detectionDistance = 50;
+    this.detectionDistance = 100;
+    this.detectionMinDistance = 5;
+    this.isDetect = false;
 };
 
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
@@ -37,16 +39,25 @@ Enemy.prototype.enemyUpdate = function() {
     if(standing) {
         this.animations.play('run');
 
-        if(!this.canWalk()) {
+        if(!this.canWalk() && !this.detectPlayer()) {
             this.directionKoef *= -1;
             this.scale.x *= -1;
         }
 
+        //TODO: переделать
         if(this.detectPlayer()) {
+            if(!this.isDetect) {
+                this.isDetect = true;
+                if((this.directionKoef == 1 && this.scale.x == 1 && (this.game.player.x < this.body.x)) || (this.directionKoef == -1 && this.scale.x == -1 && (this.game.player.x > this.body.x))) {
+                    this.scale.x *= -1;
+                }
+            }
+
             this.directionKoef = (this.game.player.x < this.body.x) ? -1 : 1;
             this.body.velocity.x = this.directionKoef * this.runningSpeed;
         } else {
             this.body.velocity.x = this.walkingSpeed * this.directionKoef;
+            this.isDetect = false;
         }
     }
 
@@ -59,11 +70,15 @@ Enemy.prototype.canWalk = function() {
         delta = MAP_TILE_WIDTH;
     }
     var positionToCheck = new Phaser.Point(this.body.x + (this.directionKoef * MAP_TILE_WIDTH) + delta, this.body.bottom + 1);
-    return this.game.map.getTileWorldXY(positionToCheck.x, positionToCheck.y, MAP_TILE_WIDTH, MAP_TILE_HEIGHT, MAP_COLLISION_TILES_NAME);
+    if(positionToCheck.x == 0) {
+        return false;
+    }
+
+    return this.game.map.getTileWorldXY(positionToCheck.x, positionToCheck.y, MAP_TILE_WIDTH, MAP_TILE_HEIGHT, MAP_COLLISION_TILES_NAME, true);
 };
 
 Enemy.prototype.detectPlayer = function() {
     var distanceToPlayer = Math.abs(this.body.x - this.game.player.x);
-    return (this.body.bottom === this.game.player.body.bottom) && (distanceToPlayer <= this.detectionDistance);
+    return (this.body.bottom === this.game.player.body.bottom) && (distanceToPlayer <= this.detectionDistance) && (distanceToPlayer > this.detectionMinDistance);
 };
 
