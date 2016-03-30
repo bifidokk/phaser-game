@@ -12,11 +12,11 @@ var Stars = function(game, score) {
 };
 
 Stars.prototype.createStars = function() {
-    for (var i = 0; i < 12; i++) {
-        var star = this.stars.create(i * 70, 2600, 'star');
+    this.game.mapData.stars.forEach(function(data){
+        var star = this.stars.create(data.worldX, data.worldY, 'star');
         star.body.gravity.y = 300;
         star.body.bounce.y = 0.2;
-    }
+    }, this);
 };
 
 Stars.prototype.collectStar = function(player, star) {

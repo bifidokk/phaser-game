@@ -13,7 +13,7 @@ Game.prototype.create = function() {
 
     this.map = new Map(this.game);
     this.map.addMap();
-    this.game.map = this.map.map;
+    this.game.mapData = this.map;
 
     this.player = new Player(this.game, 40, 3100, 'dude');
     this.game.player = this.player;

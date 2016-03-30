@@ -8,13 +8,13 @@ var Enemy = function (game, x, y, name) {
     this.game.physics.arcade.enable(this);
 
     this.body.width = 30;
-    this.body.height = 70;
+    this.body.height = 60;
     this.body.bounce.y = 0.2;
     this.body.gravity.y = 300;
     this.body.collideWorldBounds = true;
     this.body.touching.down = true;
 
-    this.anchor.setTo(.5, .5);
+    this.anchor.setTo(.5, .7);
 
     this.animations.add('run', [12, 13, 14, 15, 16, 17, 18, 19], 8, true);
     this.animations.add('jump', [9], 1, true);
@@ -74,7 +74,7 @@ Enemy.prototype.canWalk = function() {
         return false;
     }
 
-    return this.game.map.getTileWorldXY(positionToCheck.x, positionToCheck.y, MAP_TILE_WIDTH, MAP_TILE_HEIGHT, MAP_COLLISION_TILES_NAME, true);
+    return this.game.mapData.map.getTileWorldXY(positionToCheck.x, positionToCheck.y, MAP_TILE_WIDTH, MAP_TILE_HEIGHT, MAP_COLLISION_TILES_NAME, true);
 };
 
 Enemy.prototype.detectPlayer = function() {
